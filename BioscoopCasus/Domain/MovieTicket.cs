@@ -12,7 +12,7 @@
             this.IsPremium = isPremium;
         }
 
-        public double GetPrice() => MovieScreening.PicePerSeat;
+        public double GetPrice() => MovieScreening.PricePerSeat;
 
         public bool isPremiumTicket() => IsPremium;
 
