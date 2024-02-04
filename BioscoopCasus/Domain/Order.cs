@@ -1,4 +1,4 @@
-﻿using BioscoopCasus.Extensions;
+using BioscoopCasus.Extensions;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -83,4 +83,3 @@ namespace BioscoopCasus.Domain {
 
     }
 }
-
