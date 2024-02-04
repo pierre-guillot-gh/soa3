@@ -2,13 +2,16 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace BioscoopCasus.Domain {
-    public class Order {
+namespace BioscoopCasus.Domain
+{
+    public class Order
+    {
         [JsonPropertyName("OrderNumber")] public int OrderNr { get; set; }
         [JsonPropertyName("IsStudentOrder")] public bool IsStudentOrder { get; set; }
         [JsonPropertyName("Tickets")] public List<MovieTicket> Tickets { get; set; }
 
-        public Order(int orderNr, bool isStudentOrder) {
+        public Order(int orderNr, bool isStudentOrder)
+        {
             OrderNr = orderNr;
             IsStudentOrder = isStudentOrder;
             Tickets = new List<MovieTicket>();
@@ -17,68 +20,64 @@ namespace BioscoopCasus.Domain {
         static MovieScreening movieScreening = new MovieScreening(new Movie(""), DateTime.Today, 10);
         static MovieTicket movieTicket = new MovieTicket(movieScreening, 1, 2, false);
 
-        public int GetOrderNr() {
+        public int GetOrderNr()
+        {
             return OrderNr;
         }
 
-        public void AddSeatReservation(MovieTicket ticket) {
+        public void AddSeatReservation(MovieTicket ticket)
+        {
             Tickets.Add(ticket);
         }
 
-        public double CalculatePrice() {
+        public double CalculatePrice()
+        {
             double sum = 0;
             var tickets = Tickets;
 
-            for (int i = 0; i < Tickets.Count(); i++) {
-                var ticket = tickets[i];
-                double ticketPrice = ticket.GetPrice();
+            bool isWeekend = Tickets.Where(t => (int)t.MovieScreening.DateAndTime.DayOfWeek > 5).ToList().Count() >= 1;
 
-                //Check if its a non-student order and not weekend
-                if (!IsStudentOrder && i % 2 == 1 && !movieScreening.DateAndTime.IsWeekend()) {
-                    sum += 0;
-                }
-                //Check if its student order
-                else if (IsStudentOrder && i % 2 == 1) {
-                    sum += 0;
-                }
-                //Check if there are more than 6 tickets and if its a non-student
-                else if (!IsStudentOrder && tickets.Count() >= 6) {
-                    sum *= 0.9;
-                }
-                //Check for student-order & premium ticket
-                else if (IsStudentOrder && ticket.isPremiumTicket()) {
-                    sum += (ticketPrice + 2.00);
-                }
-                //Check if non-student order & premium ticket
-                else if (!IsStudentOrder && ticket.isPremiumTicket()) {
-                    sum += (ticketPrice + 3.00);
-                }
-                //Check if count is or exceeds 6, non-student order & premium ticket, add extra discount  
-                else if (!IsStudentOrder && ticket.isPremiumTicket() && tickets.Count() >= 6) {
-                    sum += ((ticketPrice + 3.00) * 0.9);
-                }
-                //Check if count is or exceeds 6, non-student order & premium ticket, add extra discount  
-                else if (IsStudentOrder && ticket.isPremiumTicket() && tickets.Count() >= 6) {
-                    sum += ((ticketPrice + 2.00) * 0.9);
-                }
+            List<MovieTicket> filtered = Tickets.Where((t, i) => (i % 2 == 1 && !((int)t.MovieScreening.DateAndTime.DayOfWeek < 5)) || (i % 2 == 1 && !IsStudentOrder)).ToList();
 
+            bool isGroupDiscount = (isWeekend && Tickets.Count >= 6);
+
+            foreach (MovieTicket movieTicket in filtered)
+            {
+                if (movieTicket.IsPremium && IsStudentOrder)
+                {
+                    if (isGroupDiscount) sum += (movieTicket.MovieScreening.PricePerSeat + 3) * 0.9;
+                    else sum += movieTicket.MovieScreening.PricePerSeat + 3;
+                }
+                else if (movieTicket.IsPremium && !IsStudentOrder)
+                {
+                    if (isGroupDiscount) sum += (movieTicket.MovieScreening.PricePerSeat + 2) * 0.9;
+                    else sum += movieTicket.MovieScreening.PricePerSeat + 2;
+                }
+                else
+                {
+                    if (isGroupDiscount) sum += movieTicket.MovieScreening.PricePerSeat * 0.9;
+                    else sum += movieTicket.MovieScreening.PricePerSeat;
+                }
             }
-
             return sum;
-
         }
 
-        public void Export(TicketExportFormat exportFormat) {
-            if (exportFormat == TicketExportFormat.PLAINTEXT) {
+        public void Export(TicketExportFormat exportFormat)
+        {
+            if (exportFormat == TicketExportFormat.PLAINTEXT)
+            {
                 Console.WriteLine($"Order Number: {OrderNr}");
                 Console.WriteLine($"Is Student Order: {IsStudentOrder}");
                 Console.WriteLine("Tickets:");
-                foreach (var ticket in Tickets) {
+                foreach (var ticket in Tickets)
+                {
                     Console.WriteLine($"  {ticket}");
                 }
                 Console.WriteLine($"Total Price: {CalculatePrice()}");
                 File.WriteAllText("path.txt", this.ToString());
-            } else if (exportFormat == TicketExportFormat.JSON) {
+            }
+            else if (exportFormat == TicketExportFormat.JSON)
+            {
                 var json = JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });
                 Console.WriteLine(json);
                 File.WriteAllText("/path.json", json);
