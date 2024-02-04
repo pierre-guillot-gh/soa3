@@ -80,7 +80,7 @@ namespace BioscoopCasus.Domain
             {
                 var json = JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });
                 Console.WriteLine(json);
-                File.WriteAllText("/path.json", json);
+                File.WriteAllText("path.json", json);
             }
         }
     }
