@@ -14,76 +14,73 @@ namespace BioscoopCasus.Domain {
             Tickets = new List<MovieTicket>();
         }
 
-        static MovieScreening movieScreening = new MovieScreening(new Movie(""), DateTime.Today, 10);
-        static MovieTicket movieTicket = new MovieTicket(movieScreening, 1, 2, false);
-
-        public int GetOrderNr() {
-            return OrderNr;
-        }
-
         public void AddSeatReservation(MovieTicket ticket) {
             Tickets.Add(ticket);
         }
 
-        public double CalculatePrice() {
-            double sum = 0;
-            var tickets = Tickets;
+        public decimal CalculatePrice() {
+            decimal totalPrice = 0;
 
-            for (int i = 0; i < Tickets.Count(); i++) {
-                var ticket = tickets[i];
-                double ticketPrice = ticket.GetPrice();
+            for (int i = 0; i < Tickets.Count; i++) {
+                MovieTicket ticket = Tickets[i];
+                decimal ticketPrice = ticket.GetPrice();
+                bool isPremium = ticket.IsPremium;
+                bool isWeekend = ticket.MovieScreening.DateAndTime.IsWeekend();
 
-                //Check if its a non-student order and not weekend
-                if (!IsStudentOrder && i % 2 == 1 && !movieScreening.DateAndTime.IsWeekend()) {
-                    sum += 0;
-                }
-                //Check if its student order
-                else if (IsStudentOrder && i % 2 == 1) {
-                    sum += 0;
-                }
-                //Check if there are more than 6 tickets and if its a non-student
-                else if (!IsStudentOrder && tickets.Count() >= 6) {
-                    sum *= 0.9;
-                }
-                //Check for student-order & premium ticket
-                else if (IsStudentOrder && ticket.isPremiumTicket()) {
-                    sum += (ticketPrice + 2.00);
-                }
-                //Check if non-student order & premium ticket
-                else if (!IsStudentOrder && ticket.isPremiumTicket()) {
-                    sum += (ticketPrice + 3.00);
-                }
-                //Check if count is or exceeds 6, non-student order & premium ticket, add extra discount  
-                else if (!IsStudentOrder && ticket.isPremiumTicket() && tickets.Count() >= 6) {
-                    sum += ((ticketPrice + 3.00) * 0.9);
-                }
-                //Check if count is or exceeds 6, non-student order & premium ticket, add extra discount  
-                else if (IsStudentOrder && ticket.isPremiumTicket() && tickets.Count() >= 6) {
-                    sum += ((ticketPrice + 2.00) * 0.9);
+                // Apply discount for every 2nd ticket for non-student orders on weekdays or all tickets for student orders
+                if ((i + 1) % 2 == 0 && (!IsStudentOrder || !isWeekend)) {
+                    ticketPrice = 0; // Skip every 2nd ticket
+                } else {
+                    // Apply group discount for non-student orders with 6 or more tickets on weekends
+                    if (!IsStudentOrder && Tickets.Count >= 6 && isWeekend) {
+                        ticketPrice *= 0.9M; // Apply 10% discount for groups on weekends
+                    }
+
+                    // Adjust premium ticket price based on student status
+                    if (isPremium) {
+                        ticketPrice += IsStudentOrder ? 2 : 3; // Premium ticket price adjustment
+                    }
                 }
 
+                totalPrice += ticketPrice;
             }
 
-            return sum;
-
+            return totalPrice;
         }
 
         public void Export(TicketExportFormat exportFormat) {
-            if (exportFormat == TicketExportFormat.PLAINTEXT) {
-                Console.WriteLine($"Order Number: {OrderNr}");
-                Console.WriteLine($"Is Student Order: {IsStudentOrder}");
-                Console.WriteLine("Tickets:");
-                foreach (var ticket in Tickets) {
-                    Console.WriteLine($"  {ticket}");
-                }
-                Console.WriteLine($"Total Price: {CalculatePrice()}");
-                File.WriteAllText("path.txt", this.ToString());
-            } else if (exportFormat == TicketExportFormat.JSON) {
-                var json = JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });
-                Console.WriteLine(json);
-                File.WriteAllText("/path.json", json);
+            Console.WriteLine("-----------------------\r\nOrder Number: {0}", OrderNr);
+            Console.WriteLine("Is Student Order: {0}", IsStudentOrder);
+            Console.WriteLine("Tickets:");
+
+            switch (exportFormat) {
+                case TicketExportFormat.PLAINTEXT:
+                    ExportToPlainText();
+                    break;
+                case TicketExportFormat.JSON:
+                    ExportToJson();
+                    break;
+                default:
+                    throw new ArgumentException("Invalid export format");
             }
         }
+
+        private void ExportToPlainText() {
+            using (StreamWriter writer = new StreamWriter("order.txt")) {
+                foreach (var ticket in Tickets) {
+                    Console.WriteLine(ticket.ToString());
+                    writer.WriteLine(ticket.ToString());
+                }
+                writer.WriteLine("Total Price: {0}", CalculatePrice());
+            }
+        }
+
+        private void ExportToJson() {
+            var json = JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });
+            Console.WriteLine(json);
+            File.WriteAllText("order.json", json);
+        }
+
     }
 }
 
