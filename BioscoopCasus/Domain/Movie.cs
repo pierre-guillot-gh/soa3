@@ -11,7 +11,7 @@
         public void AddScreening(MovieScreening screening) => this.Screenings.Add(screening);
 
         public override string ToString() {
-            return "";
+            return $"Movie title: {Title}";
         }
     }
 }

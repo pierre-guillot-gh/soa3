@@ -12,14 +12,12 @@
             this.IsPremium = isPremium;
         }
 
-        public double GetPrice() => MovieScreening.PricePerSeat;
-
-        public bool isPremiumTicket() => IsPremium;
+        public decimal GetPrice() => MovieScreening.PricePerSeat;
 
         public DateTime GetDateAndTime() => MovieScreening.DateAndTime;
 
         public override string ToString() {
-            return "";
+            return $"Row number: {RowNr}\nSeat number: {SeatNr}\nIs premium: {IsPremium}";
         }
     }
 }
