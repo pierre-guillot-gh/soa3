@@ -62,7 +62,7 @@ namespace BioscoopCasus.Tests {
             Assert.Equal(39, totalPrice);
         }
 
-        private Order CreateOrder(int numberOfTickets, decimal price, bool isPremium, bool isWeekend, bool isStudentOrder) {
+       private static Order CreateOrder(int numberOfTickets, decimal price, bool isPremium, bool isWeekend, bool isStudentOrder) {
             Movie movie = new Movie("Spongebob");
             DateTime date = isWeekend ? new DateTime(2024, 2, 10) : new DateTime(2024, 2, 6);
             MovieScreening movieScreening = new MovieScreening(movie, date, price);

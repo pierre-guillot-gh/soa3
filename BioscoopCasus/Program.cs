@@ -1,7 +1,7 @@
 ﻿using BioscoopCasus.Domain;
 
 namespace BioscoopCasus {
-    internal class Program {
+    public static class Program {
         static void Main(string[] args) {
             Movie movie = new("Spongebob");
             MovieScreening movieScreening = new(movie, DateTime.Now, 10);
