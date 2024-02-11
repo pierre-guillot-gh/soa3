@@ -30,12 +30,12 @@ namespace BioscoopCasus.Domain {
                 bool isPremium = ticket.IsPremium;
                 bool isWeekend = ticket.MovieScreening.DateAndTime.IsWeekend();
 
+                if (isPremium) ticketPrice += IsStudentOrder ? 2 : 3; // Premium ticket price adjustment
+
                 if ((i + 1) % 2 == 0 && (!IsStudentOrder || !isWeekend)) {
-                    ticketPrice = 0; // Skip every 2nd ticket or apply discount for non-student orders on weekdays or all tickets for student orders
-                } else if (!IsStudentOrder && ticketCount >= 6 && isWeekend) {
+                    ticketPrice = 0; // Skip every 2nd ticket or apply discount for non-student orders on weekdays
+                } else if (!IsStudentOrder && ticketCount >= 6) {
                     ticketPrice *= 0.9M; // Apply 10% discount for groups on weekends
-                } else if (isPremium) {
-                    ticketPrice += IsStudentOrder ? 2 : 3; // Premium ticket price adjustment
                 }
 
                 totalPrice += ticketPrice;
