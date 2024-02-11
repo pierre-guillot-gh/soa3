@@ -59,7 +59,7 @@ namespace BioscoopCasus.Tests {
             var totalPrice = order.CalculatePrice();
 
             // Assert
-            Assert.Equal(39, totalPrice);
+            Assert.Equal(35.1M, totalPrice);
         }
 
        private static Order CreateOrder(int numberOfTickets, decimal price, bool isPremium, bool isWeekend, bool isStudentOrder) {
