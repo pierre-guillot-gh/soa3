@@ -1,5 +1,5 @@
+using BioscoopCasus.Behaviours;
 using BioscoopCasus.Domain;
-using System.Diagnostics;
 namespace BioscoopCasus.Tests {
     public class OrderTests {
         [Fact]
@@ -66,7 +66,7 @@ namespace BioscoopCasus.Tests {
             Movie movie = new Movie("Spongebob");
             DateTime date = isWeekend ? new DateTime(2024, 2, 10) : new DateTime(2024, 2, 6);
             MovieScreening movieScreening = new MovieScreening(movie, date, price);
-            Order order = new Order(1, isStudentOrder);
+            Order order = new Order(1, isStudentOrder, new ExportPlainText());
 
             for (int i = 0; i < numberOfTickets; i++) {
                 order.AddSeatReservation(new MovieTicket(movieScreening, 1, 1, isPremium));

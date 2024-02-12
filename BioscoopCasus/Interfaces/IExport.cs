@@ -2,6 +2,6 @@
 
 namespace BioscoopCasus.Interfaces {
     public interface IExport {
-        void Export(Order order) { }
+        void Export(Order order);
     }
 }

@@ -4,7 +4,13 @@ using BioscoopCasus.Interfaces;
 namespace BioscoopCasus.Behaviours {
     public class ExportPlainText : IExport {
         public void Export(Order order) {
-            throw new NotImplementedException();
+            using (StreamWriter writer = new StreamWriter("order.txt")) {
+                foreach (var ticket in order.Tickets) {
+                    Console.WriteLine(ticket.ToString());
+                    writer.WriteLine(ticket.ToString());
+                }
+                writer.WriteLine("Total Price: {0}", order.CalculatePrice());
+            }
         }
     }
 }
