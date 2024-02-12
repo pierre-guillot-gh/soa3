@@ -12,8 +12,7 @@ namespace BioscoopCasus.Tests {
             order.AddSeatReservation(new MovieTicket(new MovieScreening(new Movie("Test Movie"), new System.DateTime(2024, 2, 12), 10), 1, 1, false));
 
             // Act
-            var exportJson = new ExportJson();
-            exportJson.Export(order);
+            order.Export();
 
             // Assert
             Assert.True(File.Exists("order.json"));
