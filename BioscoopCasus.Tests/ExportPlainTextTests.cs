@@ -10,8 +10,7 @@ namespace BioscoopCasus.Tests {
             order.AddSeatReservation(new MovieTicket(new MovieScreening(new Movie("Test Movie"), new System.DateTime(2024, 2, 12), 10), 1, 1, false));
 
             // Act
-            var exportPlainText = new ExportPlainText();
-            exportPlainText.Export(order);
+            order.Export();
 
             // Assert
             Assert.True(File.Exists("order.txt"));
