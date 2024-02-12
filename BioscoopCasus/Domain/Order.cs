@@ -1,5 +1,5 @@
 using BioscoopCasus.Extensions;
-using System.Text.Json;
+using BioscoopCasus.Interfaces;
 using System.Text.Json.Serialization;
 
 namespace BioscoopCasus.Domain {
@@ -8,12 +8,13 @@ namespace BioscoopCasus.Domain {
         [JsonPropertyName("IsStudentOrder")] public bool IsStudentOrder { get; set; }
         [JsonPropertyName("Tickets")] public List<MovieTicket> Tickets { get; set; }
 
-        private static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions { WriteIndented = true };
+        private readonly IExport _export;
 
-        public Order(int orderNr, bool isStudentOrder) {
+        public Order(int orderNr, bool isStudentOrder, IExport export) {
             OrderNr = orderNr;
             IsStudentOrder = isStudentOrder;
             Tickets = new List<MovieTicket>();
+            _export = export;
         }
 
         public void AddSeatReservation(MovieTicket ticket) {
@@ -44,37 +45,8 @@ namespace BioscoopCasus.Domain {
             return totalPrice;
         }
 
-        public void Export(TicketExportFormat exportFormat) {
-            Console.WriteLine("-----------------------\r\nOrder Number: {0}", OrderNr);
-            Console.WriteLine("Is Student Order: {0}", IsStudentOrder);
-            Console.WriteLine("Tickets:");
-
-            switch (exportFormat) {
-                case TicketExportFormat.PLAINTEXT:
-                    ExportToPlainText();
-                    break;
-                case TicketExportFormat.JSON:
-                    ExportToJson();
-                    break;
-                default:
-                    throw new ArgumentException("Invalid export format");
-            }
-        }
-
-        private void ExportToPlainText() {
-            using (StreamWriter writer = new StreamWriter("order.txt")) {
-                foreach (var ticket in Tickets) {
-                    Console.WriteLine(ticket.ToString());
-                    writer.WriteLine(ticket.ToString());
-                }
-                writer.WriteLine("Total Price: {0}", CalculatePrice());
-            }
-        }
-
-        private void ExportToJson() {
-            var json = JsonSerializer.Serialize(this, _jsonSerializerOptions);
-            Console.WriteLine(json);
-            File.WriteAllText("order.json", json);
+        public void Export() {
+            _export.Export(this);
         }
     }
 }
