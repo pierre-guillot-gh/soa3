@@ -17,7 +17,7 @@
         public DateTime GetDateAndTime() => MovieScreening.DateAndTime;
 
         public override string ToString() {
-            return $"Row number: {RowNr}\nSeat number: {SeatNr}\nIs premium: {IsPremium}";
+            return $"Row number: {RowNr}\nSeat number: {SeatNr}\nIs premium: {(IsPremium ? "Yes" : "No")}";
         }
     }
 }
