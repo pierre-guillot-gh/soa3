@@ -6,9 +6,7 @@ namespace BioscoopCasus.Behaviours.CalculatePrice {
         private const decimal PremiumStudentSurcharge = 2M;
         private const decimal PremiumNonStudentSurcharge = 3M;
 
-        public decimal CalculatePrice(MovieTicket ticket, bool isStudentOrder) {
-            decimal ticketPrice = ticket.GetPrice();
-
+        public decimal CalculatePrice(decimal ticketPrice, int count, int totalTickets, MovieTicket ticket, bool isStudentOrder) {
             if (ticket.IsPremium) {
                 decimal premiumSurcharge = isStudentOrder ? PremiumStudentSurcharge : PremiumNonStudentSurcharge;
                 ticketPrice += premiumSurcharge;

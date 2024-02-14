@@ -1,5 +1,4 @@
-﻿using BioscoopCasus.Behaviours.CalculatePrice;
-using BioscoopCasus.Behaviours.Export;
+﻿using BioscoopCasus.Behaviours.Export;
 using BioscoopCasus.Domain;
 
 namespace BioscoopCasus.Tests {
@@ -7,7 +6,7 @@ namespace BioscoopCasus.Tests {
         [Fact]
         public void ExportJson_ExportOrder_CheckFileContents() {
             // Arrange
-            var order = new Order(1, false, new ExportJson(), new CalculatePremium());
+            var order = new Order(1, false, new ExportJson());
             order.AddSeatReservation(new MovieTicket(new MovieScreening(new Movie("Test Movie"), new System.DateTime(2024, 2, 12), 10), 1, 1, false));
 
             // Act

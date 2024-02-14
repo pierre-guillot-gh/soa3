@@ -2,6 +2,6 @@
 
 namespace BioscoopCasus.Interfaces {
     public interface ICalculatePrice {
-       public decimal CalculatePrice(MovieTicket ticket, bool IsStudentOrder);
+        public decimal CalculatePrice(decimal ticketPrice, int count, int totalTickets, MovieTicket ticket, bool isStudentOrder);
     }
 }
