@@ -1,4 +1,5 @@
-using BioscoopCasus.Behaviours;
+using BioscoopCasus.Behaviours.CalculatePrice;
+using BioscoopCasus.Behaviours.Export;
 using BioscoopCasus.Domain;
 namespace BioscoopCasus.Tests {
     public class OrderTests {
@@ -62,11 +63,11 @@ namespace BioscoopCasus.Tests {
             Assert.Equal(35.1M, totalPrice);
         }
 
-       private static Order CreateOrder(int numberOfTickets, decimal price, bool isPremium, bool isWeekend, bool isStudentOrder) {
+        private static Order CreateOrder(int numberOfTickets, decimal price, bool isPremium, bool isWeekend, bool isStudentOrder) {
             Movie movie = new Movie("Spongebob");
             DateTime date = isWeekend ? new DateTime(2024, 2, 10) : new DateTime(2024, 2, 6);
             MovieScreening movieScreening = new MovieScreening(movie, date, price);
-            Order order = new Order(1, isStudentOrder, new ExportPlainText());
+            Order order = new Order(1, isStudentOrder, new ExportPlainText(), new CalculatePremium());
 
             for (int i = 0; i < numberOfTickets; i++) {
                 order.AddSeatReservation(new MovieTicket(movieScreening, 1, 1, isPremium));

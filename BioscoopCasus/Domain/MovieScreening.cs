@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualBasic;
-
-namespace BioscoopCasus.Domain {
+﻿namespace BioscoopCasus.Domain {
     public class MovieScreening {
 
         public DateTime DateAndTime { get; set; }

@@ -1,7 +1,7 @@
 ﻿using BioscoopCasus.Domain;
 using BioscoopCasus.Interfaces;
 
-namespace BioscoopCasus.Behaviours {
+namespace BioscoopCasus.Behaviours.Export {
     public class ExportPlainText : IExport {
         public void Export(Order order) {
             using (StreamWriter writer = new StreamWriter("order.txt")) {

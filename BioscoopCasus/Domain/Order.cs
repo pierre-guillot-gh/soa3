@@ -9,12 +9,14 @@ namespace BioscoopCasus.Domain {
         [JsonPropertyName("Tickets")] public List<MovieTicket> Tickets { get; set; }
 
         private readonly IExport _export;
+        private readonly ICalculatePrice _calculatePrice;
 
-        public Order(int orderNr, bool isStudentOrder, IExport export) {
+        public Order(int orderNr, bool isStudentOrder, IExport export, ICalculatePrice calculatePrice) {
             OrderNr = orderNr;
             IsStudentOrder = isStudentOrder;
             Tickets = new List<MovieTicket>();
             _export = export;
+            _calculatePrice = calculatePrice;
         }
 
         public void AddSeatReservation(MovieTicket ticket) {
@@ -31,7 +33,7 @@ namespace BioscoopCasus.Domain {
                 bool isPremium = ticket.IsPremium;
                 bool isWeekend = ticket.MovieScreening.DateAndTime.IsWeekend();
 
-                if (isPremium) ticketPrice += IsStudentOrder ? 2 : 3; // Premium ticket price adjustment
+               ticketPrice = _calculatePrice.CalculatePrice(ticket, IsStudentOrder); // Premium ticket price adjustment
 
                 if ((i + 1) % 2 == 0 && (!IsStudentOrder || !isWeekend)) {
                     ticketPrice = 0; // Skip every 2nd ticket or apply discount for non-student orders on weekdays
