@@ -1,4 +1,4 @@
-﻿using BioscoopCasus.Behaviours;
+﻿using BioscoopCasus.Behaviours.Export;
 using BioscoopCasus.Domain;
 
 namespace BioscoopCasus.Tests {

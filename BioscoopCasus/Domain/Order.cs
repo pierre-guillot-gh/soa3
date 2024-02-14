@@ -1,3 +1,4 @@
+using BioscoopCasus.Behaviours.CalculatePrice;
 using BioscoopCasus.Extensions;
 using BioscoopCasus.Interfaces;
 using System.Text.Json.Serialization;
@@ -23,21 +24,15 @@ namespace BioscoopCasus.Domain {
 
         public decimal CalculatePrice() {
             decimal totalPrice = 0;
-            int ticketCount = Tickets.Count;
+            int totalTickets = Tickets.Count;
 
-            for (int i = 0; i < Tickets.Count; i++) {
+            for (int i = 0; i < totalTickets; i++) {
                 MovieTicket ticket = Tickets[i];
                 decimal ticketPrice = ticket.GetPrice();
-                bool isPremium = ticket.IsPremium;
-                bool isWeekend = ticket.MovieScreening.DateAndTime.IsWeekend();
 
-                if (isPremium) ticketPrice += IsStudentOrder ? 2 : 3; // Premium ticket price adjustment
-
-                if ((i + 1) % 2 == 0 && (!IsStudentOrder || !isWeekend)) {
-                    ticketPrice = 0; // Skip every 2nd ticket or apply discount for non-student orders on weekdays
-                } else if (!IsStudentOrder && ticketCount >= 6) {
-                    ticketPrice *= 0.9M; // Apply 10% discount for groups on weekends
-                }
+                ticketPrice = new CalculatePremium().CalculatePrice(ticketPrice, i, totalTickets, ticket, IsStudentOrder);
+                ticketPrice = new CalculateFree().CalculatePrice(ticketPrice, i, totalTickets, ticket, IsStudentOrder);
+                ticketPrice = new CalculateDiscount().CalculatePrice(ticketPrice, i, totalTickets, ticket, IsStudentOrder);
 
                 totalPrice += ticketPrice;
             }

@@ -1,7 +1,5 @@
-﻿
-using BioscoopCasus.Behaviours;
+﻿using BioscoopCasus.Behaviours.Export;
 using BioscoopCasus.Domain;
-using System.Text.Json;
 
 namespace BioscoopCasus.Tests {
     public class ExportJsonTests {
