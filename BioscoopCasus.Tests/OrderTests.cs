@@ -11,7 +11,7 @@ namespace BioscoopCasus.Tests {
             var totalPrice = order.CalculatePrice();
 
             // Assert
-            Assert.Equal(10, totalPrice);
+            Assert.Equal(10M, totalPrice);
         }
 
         [Fact]
@@ -23,7 +23,7 @@ namespace BioscoopCasus.Tests {
             var totalPrice = order.CalculatePrice();
 
             // Assert
-            Assert.Equal(30, totalPrice);
+            Assert.Equal(30M, totalPrice);
         }
 
         [Fact]
@@ -35,7 +35,7 @@ namespace BioscoopCasus.Tests {
             var totalPrice = order.CalculatePrice();
 
             // Assert
-            Assert.Equal(36, totalPrice);
+            Assert.Equal(36M, totalPrice);
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace BioscoopCasus.Tests {
             var totalPrice = order.CalculatePrice();
 
             // Assert
-            Assert.Equal(36, totalPrice);
+            Assert.Equal(36M, totalPrice);
         }
 
         [Fact]
