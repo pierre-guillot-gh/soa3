@@ -14,4 +14,4 @@ Eren Aygun & Junhao Chen
 
 -   [Opdracht 6](https://github.com/dalikey/soa3/blob/opdracht6)
 
--   [Eindopdracht](https://github.com/dalikey/soa3/blob/eindopdracht)
+-   [Eindopdracht](https://github.com/dalikey/devops)
