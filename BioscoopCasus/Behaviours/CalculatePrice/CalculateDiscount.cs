@@ -10,6 +10,11 @@ namespace BioscoopCasus.Behaviours.CalculatePrice {
                 ticketPrice *= 0.9M;
             }
 
+            dynamic d = 5;
+            var x = d >> 5.4;   // Noncompliant
+            x = d << null;      // Noncompliant
+            x <<= new object(); // Noncompliant
+
             return ticketPrice;
         }
     }
